@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+
+route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
+Route::get('/user-home', [UserController::class, 'index'])->name('user-home');
