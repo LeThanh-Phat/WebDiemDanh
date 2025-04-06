@@ -5,7 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class dangnhap extends Model
+class Dangnhap extends Model
 {
-    use HasFactory;
+       
+    protected $table = 'mssv';
+    protected $primaryKey = 'password';
+    protected $fillable = [
+        'mssv',
+        'password',
+    ];
+    public $timestamps = false;
 }
