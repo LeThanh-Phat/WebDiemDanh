@@ -2,34 +2,49 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Giangvien;
 use Illuminate\Http\Request;
-
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class GiangvienController extends Controller
 {
-    public function xuLyDangNhapGV(Request $request)
+    public function dangNhap(Request $request)
     {
-        $request->validate([
-            'maGV' => 'required|string',
-            'password' => 'required|string',
+        $credentials = $request->only('Magiangvien', 'password');
+
+        $gv = Giangvien::where('Magiangvien', $credentials['Magiangvien'])->first();
+
+        if (!$gv || sha1($credentials['password']) !== $gv->password_giangvien) {
+            return response()->json(['message' => 'Sai mã GV hoặc mật khẩu'], 401);
+        }
+
+        $token = JWTAuth::fromUser($gv);
+
+        return response()->json([
+            'message' => 'Đăng nhập thành công',
+            'token' => $token,
+            'name' => $gv->name_giangvien,
+            'canlogin' => true,
         ]);
+    }
 
-        $user = DB::table('giangvien')->where('Magiangvien', $request->maGV)->first();
+    public function thongTin()
+    {
+        $gv = JWTAuth::parseToken()->authenticate();
 
-        if ($user && sha1($request->password) == $user->password_giangvien) {
-            Session::put('maGV', $user->Magiangvien);
-            Session::put('nameGV', $user->name_giangvien);
-
-            return response()->json([
-                'message' => 'Đăng nhập thành công',
-                'canlogin' => true,
-                'userName' => $user->name_giangvien
-            ]);
-        } else return response()->json([
-            'message' => 'Đăng nhập không thành công',
-            'canlogin' => false,
+        return response()->json([
+            'magv' => $gv->Magiangvien,
+            'name' => $gv->name_giangvien,
+            'email' => $gv->email_giangvien,
+            'diachi' => $gv->diachi_giangvien,
+            'sdt' => $gv->sdt_giangvien,
+            'gioitinh' => $gv->gioitinh_giangvien,
         ]);
+    }
+
+    public function dangXuat()
+    {
+        JWTAuth::invalidate(JWTAuth::getToken());
+        return response()->json(['message' => 'Đăng xuất thành công']);
     }
 }

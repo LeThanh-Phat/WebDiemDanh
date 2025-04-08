@@ -3,41 +3,52 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
+use App\Models\Sinhvien;
+use Illuminate\Support\Facades\Hash;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class sinhvienController extends Controller
 {
-    public function index()
-    {
-        return view('dangnhap');
-    }
     public function xuLyDangNhap(Request $request)
     {
-        $request->validate([
-            'mssv' => 'required|string',
-            'password' => 'required|string',
-        ]);
+        $yeucau = $request->only('mssv', 'password');
 
-        $user = DB::table('sinhvien')->where('mssv', $request->mssv)->first();
+        // Override password check manually because we use sha1
+        $sinhvien = Sinhvien::where('mssv', $yeucau['mssv'])->first();
 
-        if ($user && sha1($request->password) == $user->password_sinhvien) {
-            Session::put('mssv', $user->mssv);
-            Session::put('name', $user->name_sinhvien);
+        if (!$sinhvien || sha1($yeucau['password']) !== $sinhvien->password_sinhvien) {
+            return response()->json(['message' => 'Đăng nhập không thành công'], 401);
+        }
 
-            return response()->json([
-                'message' => 'Đăng nhập thành công',
-                'canlogin' => true,
-                'userName' => $user->name_sinhvien
-            ]);
-        } else return response()->json([
-            'message' => 'Đăng nhập không thành công',
-            'canlogin' => false,
+        $token = JWTAuth::fromUser($sinhvien);
+
+        return response()->json([
+            'message' => 'Đăng nhập thành công',
+            'canlogin' => true,
+            'token' => $token,
+            'userName' => $sinhvien->name_sinhvien,
         ]);
     }
+
     public function dangXuat()
     {
-        Session::flush();
-        return redirect()->route('dangnhap');
+        JWTAuth::invalidate(JWTAuth::getToken());
+        return response()->json(['message' => 'Đăng xuất thành công']);
+    }
+
+    public function loadTTSV()
+    {
+        $sinhvien = JWTAuth::parseToken()->authenticate();
+
+        return response()->json([
+            'studentId' => $sinhvien->mssv,
+            'fullName' => $sinhvien->name_sinhvien,
+            'className' => $sinhvien->lop_sinhvien,
+            'birthDate' => $sinhvien->ngaysinh_sinhvien,
+            'gender' => $sinhvien->gioitinh_sinhvien,
+            'address' => $sinhvien->diachi_sinhvien,
+            'email' => $sinhvien->email_sinhvien,
+            'phone' => $sinhvien->sdt_sinhvien,
+        ]);
     }
 }
