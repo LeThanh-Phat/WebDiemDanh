@@ -12,6 +12,7 @@ class Sinhvien extends Authenticatable implements JWTSubject
     public $incrementing = true;
     public $timestamps = false;
 
+
     protected $fillable = [
         'mssv',
         'password_sinhvien',
