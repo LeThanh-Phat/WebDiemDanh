@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: apiwebnews
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_KEY
+        generateValue: true
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        value: mysql-webdiemdanh-webdiemdanh.k.aivencloud.com
+      - key: DB_PORT
+        value: 28453
+      - key: DB_DATABASE
+        value: WebDiemDanhSinhVien	
+      - key: DB_USERNAME
+        value: avnadmin
+      - key: DB
