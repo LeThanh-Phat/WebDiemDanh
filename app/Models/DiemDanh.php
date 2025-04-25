@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-
 use Illuminate\Database\Eloquent\Model;
-
 
 class DiemDanh extends Model
 {
@@ -12,12 +10,10 @@ class DiemDanh extends Model
     protected $primaryKey = 'id_diemdanh';
     public $timestamps = false;
 
-
     public function sinhVien()
     {
         return $this->belongsTo(SinhVien::class, 'id_sinhvien', 'id_sinhvien');
     }
-
 
     public function buoiHoc()
     {
