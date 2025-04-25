@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Validator; // Thêm import này
 use Illuminate\Http\Request;
 use App\Models\Admin;
 use App\Models\Giangvien;
-use App\Models\Sinhvien;
+use App\Models\SinhVien;
 use App\Models\MonHoc;
 use App\Models\SinhVienLopHoc;
 use App\Models\BuoiHoc;
