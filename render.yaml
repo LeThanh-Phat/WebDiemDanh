@@ -16,7 +16,10 @@ services:
       - key: DB_PORT
         value: 28453
       - key: DB_DATABASE
-        value: WebDiemDanhSinhVien	
+        value: WebDiemDanhSinhVien
       - key: DB_USERNAME
         value: avnadmin
-      - key: DB
+      # THÊM DÒNG NÀY:
+    startCommand: |
+      php artisan storage:link
+      php artisan serve --host=0.0.0.0 --port=8000
