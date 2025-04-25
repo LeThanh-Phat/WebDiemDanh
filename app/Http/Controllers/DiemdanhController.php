@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Cache;
 use Endroid\QrCode\QrCode;
 use Endroid\QrCode\Writer\PngWriter;
-use App\Models\Buoihoc;
+use App\Models\BuoiHoc;
 use App\Models\Diemdanh;
 use App\Models\LopHoc;
 use App\Models\SinhVien;
