@@ -39,6 +39,7 @@ RUN composer install --no-dev --optimize-autoloader -vvv
 
 # Set quyền nếu Laravel cần
 RUN chmod -R 775 storage bootstrap/cache
+RUN chown -R www-data:www-data storage publice
 
 # Expose cổng và khởi động Laravel
 EXPOSE 8000
