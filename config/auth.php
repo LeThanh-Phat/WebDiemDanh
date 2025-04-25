@@ -3,14 +3,22 @@
 return [
 
     'defaults' => [
-        'guard' => 'sinhvien_api',
-        'passwords' => 'users',
+        'guard' => 'sanctum',
+        'passwords' => 'sinhviens',
     ],
 
     'guards' => [
-        'sinhvien_api' => [
-            'driver' => 'jwt',
-            'provider' => 'sinhvien',
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'sinhviens',
+        ],
+        'admin' => [
+            'driver' => 'sanctum',
+            'provider' => 'admins',
+        ],
+        'sanctum' => [
+            'driver' => 'sanctum',
+            'provider' => 'sinhviens',
         ],
 
         'giangvien_api' => [
@@ -20,11 +28,14 @@ return [
     ],
 
     'providers' => [
-        'sinhvien' => [
+        'sinhviens' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Sinhvien::class,
+            'model' => App\Models\SinhVien::class,
         ],
-
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class, // Sử dụng model Admin
+        ],
         'giangvien' => [
             'driver' => 'eloquent',
             'model' => App\Models\Giangvien::class,

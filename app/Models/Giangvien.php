@@ -9,7 +9,7 @@ class Giangvien extends Authenticatable implements JWTSubject
 {
     protected $table = 'giangvien';
     protected $primaryKey = 'id_giangvien';
-    public $timestamps = true;
+    public $timestamps = false;
 
     protected $fillable = [
         'Magiangvien',
@@ -17,6 +17,8 @@ class Giangvien extends Authenticatable implements JWTSubject
         'email_giangvien',
         'sdt_giangvien',
         'password_giangvien',
+        'gioitinh_giangvien',
+        'id_admin',
     ];
 
     protected $hidden = ['password_giangvien'];
@@ -24,6 +26,10 @@ class Giangvien extends Authenticatable implements JWTSubject
     public function getJWTIdentifier()
     {
         return $this->getKey();
+    }
+    public function getAuthPassword()
+    {
+        return $this->password_giangvien;
     }
 
     public function getJWTCustomClaims()

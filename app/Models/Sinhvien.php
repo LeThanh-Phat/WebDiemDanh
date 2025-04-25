@@ -3,39 +3,31 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Tymon\JWTAuth\Contracts\JWTSubject;
+use Laravel\Sanctum\HasApiTokens;
 
-class Sinhvien extends Authenticatable implements JWTSubject
+class SinhVien extends Authenticatable
 {
+    use HasApiTokens;
+
     protected $table = 'sinhvien';
     protected $primaryKey = 'id_sinhvien';
-    public $incrementing = true;
     public $timestamps = false;
 
-
     protected $fillable = [
-        'mssv',
-        'password_sinhvien',
         'name_sinhvien',
         'email_sinhvien',
-        'sdt_sinhvien'
+        'password_sinhvien',
+        'sdt_sinhvien',
+        'diachi_sinhvien',
+        'mssv',
+        'lop_sinhvien',
+        'ngaysinh_sinhvien',
+        'gioitinh_sinhvien',
+        'id_admin',
     ];
 
-    protected $hidden = ['password_sinhvien'];
-
-    // Mapping password field
-    public function getAuthPassword()
+    public function lopHocs()
     {
-        return $this->password_sinhvien;
-    }
-
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
-
-    public function getJWTCustomClaims()
-    {
-        return [];
+        return $this->belongsToMany(LopHoc::class, 'sinhvien_lophoc', 'id_sinhvien', 'id_lophoc');
     }
 }

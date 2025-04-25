@@ -13,21 +13,19 @@ class sinhvienController extends Controller
     {
         $yeucau = $request->only('mssv', 'password');
 
-        // Override password check manually because we use sha1
         $sinhvien = Sinhvien::where('mssv', $yeucau['mssv'])->first();
 
         if (!$sinhvien || sha1($yeucau['password']) !== $sinhvien->password_sinhvien) {
             return response()->json(['message' => 'Đăng nhập không thành công'], 401);
+        } else {
+            $token = JWTAuth::fromUser($sinhvien);
+            return response()->json([
+                'message' => 'Đăng nhập thành công',
+                'canlogin' => true,
+                'token' => $token,
+                'userName' => $sinhvien->name_sinhvien,
+            ]);
         }
-
-        $token = JWTAuth::fromUser($sinhvien);
-
-        return response()->json([
-            'message' => 'Đăng nhập thành công',
-            'canlogin' => true,
-            'token' => $token,
-            'userName' => $sinhvien->name_sinhvien,
-        ]);
     }
 
     public function dangXuat()
