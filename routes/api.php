@@ -22,6 +22,7 @@ Route::middleware(['auth:giangvien_api'])->group(function () {
     Route::get('/diemdanh/sinhvien/{id_lophoc}', [DiemdanhController::class, 'getSinhVienByLopHoc']);
     route::get('/diemdanh/submit', [DiemdanhController::class, 'submitDiemDanh'])->name('diemdanh.submit');
     Route::get('/giangvien/lichgiangday', [GiangvienController::class, 'lichgiangday']);
+    Route::post('/giangvien/monhoc', [GiangvienController::class, 'timkiemmonhoc']);
 });
 
 Route::post('/login', [AuthController::class, 'login']);

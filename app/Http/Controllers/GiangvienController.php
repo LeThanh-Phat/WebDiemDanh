@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Giangvien;
+use App\Models\MonHoc;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\DB;
@@ -76,5 +77,21 @@ class GiangvienController extends Controller
             ->get();
 
         return response()->json(['data' => $data, 'message' => 'Lịch giảng dạy']);
+    }
+    public function timkiemmonhoc(Request $request)
+    {
+        $gv = JWTAuth::parseToken()->authenticate();
+        $credentials = $request->validate([
+            'Tenmonhoc' => 'required|string',
+        ]);
+        $mh = MonHoc::where('name_monhoc', $credentials['Tenmonhoc'])->first();
+        if (!$mh) {
+            return response()->json(['message' => 'Không tìm thấy môn học'], 404);
+        } else {
+            return response()->json([
+                'idmh' => $mh->id_monhoc,
+                'mamon' => $mh->mamon,
+            ]);
+        }
     }
 }

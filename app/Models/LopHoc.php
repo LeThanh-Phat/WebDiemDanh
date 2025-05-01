@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Giangvien;
 use Illuminate\Database\Eloquent\Model;
 
 class LopHoc extends Model
@@ -25,7 +26,7 @@ class LopHoc extends Model
 
     public function giangVien()
     {
-        return $this->belongsTo(GiangVien::class, 'id_giangvien', 'id_giangvien');
+        return $this->belongsTo(Giangvien::class, 'id_giangvien', 'id_giangvien');
     }
     public function admin()
     {

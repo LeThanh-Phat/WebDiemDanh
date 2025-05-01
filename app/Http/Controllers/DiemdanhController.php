@@ -29,7 +29,6 @@ class DiemdanhController extends Controller
 
             $id_buoihoc = $validated['id_buoihoc'];
 
-            // Tìm buổi học
             $buoiHoc = BuoiHoc::find($id_buoihoc);
             if (!$buoiHoc) {
                 return response()->json([
@@ -40,28 +39,22 @@ class DiemdanhController extends Controller
 
             $id_lophoc = $buoiHoc->id_lophoc;
 
-            // Dữ liệu mã QR
+
             $qrData = json_encode([
                 'id_buoihoc' => $id_buoihoc,
                 'id_lophoc' => $id_lophoc,
             ]);
 
-            // Đường dẫn lưu mã QR
             $fileName = 'qr_buoihoc_' . $id_buoihoc . '.png';
             $filePath = 'qr_codes/' . $fileName;
             $fullPath = storage_path('app/public/' . $filePath);
 
-
-
-
-            // Tạo mã QR
             $qrCode = QrCode::create($qrData)
                 ->setSize(300);
             $writer = new PngWriter();
             $result = $writer->write($qrCode);
             $result->saveToFile($fullPath);
 
-            // Tạo URL chính xác
             $qrUrl = asset('storage/' . $filePath);
 
             return response()->json([
@@ -175,7 +168,7 @@ class DiemdanhController extends Controller
     public function getSinhVienDiemDanhByBuoiHoc(Request $request, $id_buoihoc)
     {
         try {
-            // Kiểm tra $id_buoihoc
+            
             if (!$id_buoihoc || !is_numeric($id_buoihoc)) {
                 return response()->json([
                     'status' => 'error',
@@ -194,7 +187,7 @@ class DiemdanhController extends Controller
             }
 
 
-            // Kiểm tra buổi học có tồn tại và thuộc giảng viên không
+        
             $buoiHoc = BuoiHoc::where('id_buoihoc', $id_buoihoc)
                 ->whereHas('lophoc', function ($query) use ($giangVien) {
                     $query->where('id_giangvien', $giangVien->id_giangvien);
@@ -210,7 +203,7 @@ class DiemdanhController extends Controller
             }
 
 
-            // Lấy danh sách sinh viên đã điểm danh cho buổi học này
+           
             $sinhVienList = SinhVien::whereIn('id_sinhvien', function ($query) use ($id_buoihoc) {
                 $query->select('id_sinhvien')
                     ->from('diemdanh')
